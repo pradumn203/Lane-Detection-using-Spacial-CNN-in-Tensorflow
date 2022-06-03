@@ -1,4 +1,4 @@
-# Lane Detection using Spacial Convolutional Neural Networks in Tensorflow
+# Lane Detection using Spatial Convolutional Neural Networks in Tensorflow
 
 ## Created and Modified by: <br>
 [![Pradumn Mishra](https://img.shields.io/badge/-Pradumn%20Mishra-magneta)](https://www.linkedin.com/in/pradumn203/)<br>
