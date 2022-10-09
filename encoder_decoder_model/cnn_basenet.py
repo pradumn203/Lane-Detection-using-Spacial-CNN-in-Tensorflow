@@ -413,4 +413,52 @@ class CNNBaseModel(object):
         return ret
 
     @staticmethod
+    def dilation_conv(input_tensor, k_size, out_dims, rate, padding='SAME',
+                      w_init=None, b_init=None, use_bias=False, name=None):
+        """
+
+        :param input_tensor:
+        :param k_size:
+        :param out_dims:
+        :param rate:
+        :param padding:
+        :param w_init:
+        :param b_init:
+        :param use_bias:
+        :param name:
+        :return:
+        """
+        with tf.variable_scope(name):
+            in_shape = input_tensor.get_shape().as_list()
+            in_channel = in_shape[3]
+            assert in_channel is not None, "[Conv2D] Input cannot have unknown channel!"
+
+            padding = padding.upper()
+
+            if isinstance(k_size, list):
+                filter_shape = [k_size[0], k_size[1]] + [in_channel, out_dims]
+            else:
+                filter_shape = [k_size, k_size] + [in_channel, out_dims]
+
+            if w_init is None:
+                w_init = tf.contrib.layers.variance_scaling_initializer()
+            if b_init is None:
+                b_init = tf.constant_initializer()
+
+            w = tf.get_variable('W', filter_shape, initializer=w_init)
+            b = None
+
+            if use_bias:
+                b = tf.get_variable('b', [out_dims], initializer=b_init)
+
+            conv = tf.nn.atrous_conv2d(value=input_tensor, filters=w, rate=rate,
+                                       padding=padding, name='dilation_conv')
+
+            if use_bias:
+                ret = tf.add(conv, b)
+            else:
+                ret = conv
+
+        return ret
+
     
